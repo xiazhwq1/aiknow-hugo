@@ -2,6 +2,7 @@ baseURL: "https://aiknow.org.cn"
 languageCode: "zh-cn"
 title: "AI Know"
 enableEmoji: false
+uglyURLs: true
 
 markup:
   goldmark:
@@ -18,13 +19,13 @@ menu:
       url: "/"
       weight: 1
     - name: "早报"
-      url: "/ai-morning/"
+      url: "/daily/ai-morning/"
       weight: 2
     - name: "AI技术"
-      url: "/ai-tech/"
+      url: "/daily/ai-tech/"
       weight: 3
     - name: "AI财经"
-      url: "/ai-finance/"
+      url: "/daily/ai-finance/"
       weight: 4
     - name: "硬件编程"
       url: "/hardware/"
