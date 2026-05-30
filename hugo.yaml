@@ -3,6 +3,7 @@ locale: "zh-cn"
 title: "AI Know"
 enableEmoji: false
 uglyURLs: true
+buildFuture: true
 
 markup:
   goldmark:
