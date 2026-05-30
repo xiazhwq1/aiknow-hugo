@@ -1,8 +1,8 @@
 {{ define "main" }}
 <div class="section-header" style="text-align:center;padding:48px 0 24px">
   <h1>{{ .Title }}</h1>
-  {{ with .Content }}<p style="color:var(--text-3);margin-top:8px;font-size:0.9375rem">{{ . }}</p>{{ end }}
-  <p style="color:var(--text-4);font-size:0.8125rem;margin-top:4px">共 <span class="count">{{ len .Pages }} 篇</span></p>
+  {{ with .Params.description }}<p style="color:var(--text-3);margin-top:8px;font-size:0.9375rem">{{ . }}</p>{{ end }}
+  <p style="color:var(--text-4);font-size:0.8125rem;margin-top:4px">共 {{ len .Pages }} 篇</p>
 </div>
 
 <div class="list" style="margin-top:24px">
@@ -15,9 +15,5 @@
     <span class="arrow" style="color:var(--text-4);flex-shrink:0">→</span>
   </a>
   {{ end }}
-</div>
-
-<div class="footer" style="text-align:center;padding:40px 0 20px;color:var(--text-4);font-size:0.8125rem">
-  <p>AI Know · 用热爱驱动技术</p>
 </div>
 {{ end }}

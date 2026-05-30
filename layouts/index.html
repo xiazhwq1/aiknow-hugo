@@ -8,31 +8,26 @@
   <div style="text-align:center;font-size:0.75rem;color:var(--text-4);margin-top:6px">搜索早报、技术分析、财经、硬件编程等全部内容</div>
 </div>
 
-<!-- Analysis Cards -->
-{{ $cards := .Params.cards }}
-{{ $sections := dict "overview" "今日头条深度分析" "tech" "技术维度" "finance" "财经维度" }}
-{{ $icons := dict "overview" "" "tech" "" "finance" "" }}
-
-{{ $seen := slice }}
 <div style="max-width:780px;margin:0 auto;padding:0 20px">
-{{ range $cards }}
-  {{ if not (in $seen .section) }}
-    {{ $seen = $seen | append .section }}
-    <div class="section" style="margin-bottom:44px">
+{{ range .Params.cards }}
+  <div class="section" style="margin-bottom:44px">
     <div class="section-title" style="font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:16px;display:flex;align-items:center;gap:8px">
-      {{ index $sections .section | default .section }}
+      {{ if eq .section "overview" }}今日头条深度分析
+      {{ else if eq .section "tech" }}技术维度
+      {{ else if eq .section "finance" }}财经维度
+      {{ else }}{{ .section }}{{ end }}
     </div>
-  {{ end }}
     <div class="analysis-card" style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;padding:24px;transition:all 0.2s;margin-bottom:16px">
       <h2 style="font-size:1.05rem;color:var(--text-1);margin:0 0 10px;font-weight:700">{{ .title }}</h2>
       <p style="color:var(--text-2);line-height:1.85;margin:0 0 12px;font-size:0.9375rem">{{ .content }}</p>
       {{ with .quote }}
       <blockquote style="border-left:3px solid var(--accent);margin:12px 0;padding:8px 16px;color:var(--text-3);font-size:0.875rem">{{ . }}</blockquote>
       {{ end }}
+      {{ with .link }}
+      <a href="{{ . }}" class="read-more" style="display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:0.875rem;font-weight:600;text-decoration:none;margin-top:8px;transition:gap 0.2s">阅读全文 →</a>
+      {{ end }}
     </div>
-  {{ if eq .section "finance" }}
-    </div>
-  {{ end }}
+  </div>
 {{ end }}
 
 <!-- Section Links -->
