@@ -33,4 +33,4 @@ jobs:
           cd public
           tar czf /tmp/hugo_build.tar.gz .
           scp -i ~/.ssh/deploy_key /tmp/hugo_build.tar.gz ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/tmp/
-          ssh -i ~/.ssh/deploy_key ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd /home/admin/.openclaw/workspace/xiaoao && tar xzf /tmp/hugo_build.tar.gz && rm /tmp/hugo_build.tar.gz && echo deployed"
+          ssh -i ~/.ssh/deploy_key ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'mkdir -p /home/admin/.openclaw/workspace/xiaoao && cd /home/admin/.openclaw/workspace/xiaoao && tar xzf /tmp/hugo_build.tar.gz && rm /tmp/hugo_build.tar.gz && echo deployed'
