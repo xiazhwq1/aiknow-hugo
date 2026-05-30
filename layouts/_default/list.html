@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div style="text-align:center;padding:48px 0 24px">
+  <h1>{{ .Title }}</h1>
+  <p style="color:var(--text-muted);margin-top:8px">共 {{ len .Pages }} 期</p>
+</div>
+
+<div style="margin-top:24px">
+  {{ range .Pages.ByDate.Reverse }}
+  <a href="{{ .RelPermalink }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line-color);text-decoration:none;color:var(--text);transition:background 0.15s">
+    <span style="font-weight:600;font-size:0.95em;white-space:nowrap">{{ .Date.Format "2006-01-02" }}</span>
+    <span style="font-size:0.8em;color:var(--text-faint)">{{ .Date.Format "Monday" }}</span>
+    {{ with .Param "tagline" }}
+    <span style="flex:1;font-size:0.875em;color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ . }}</span>
+    {{ end }}
+    <span style="color:var(--text-faint);flex-shrink:0">→</span>
+  </a>
+  {{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  {{ partial "nav.html" . }}
+  <main class="container" style="max-width:860px;margin:0 auto;padding:0 20px 40px">
+    {{ block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+  <script src="/assets/js/theme.js"></script>
+</body>
+</html>

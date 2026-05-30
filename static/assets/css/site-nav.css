@@ -1,0 +1,133 @@
+/* aiknow.org.cn — 全站统一导航 */
+/* 所有页面引用此文件即可获得一致的导航栏 */
+
+/* ─── Nav Container ─── */
+.site-nav {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--pm-border-thin, rgba(128,128,128,0.15));
+  position: sticky;
+  top: 0;
+  background: var(--pm-surface-page, var(--bg, #fff));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 100;
+  gap: 8px;
+}
+
+/* ─── Logo ─── */
+.site-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+.site-nav-logo img {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+}
+.site-nav-logo span {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--pm-text-primary, inherit);
+  white-space: nowrap;
+}
+
+/* ─── Links ─── */
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.site-nav-links::-webkit-scrollbar { display: none; }
+
+.site-nav-links a {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pm-text-muted, #888);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.site-nav-links a:hover {
+  color: var(--pm-text-primary, #222);
+  background: var(--pm-surface-container, rgba(0,0,0,0.04));
+}
+.site-nav-links a.active {
+  color: var(--pm-accent, #2563eb);
+  background: var(--pm-accent-dim, rgba(37,99,235,0.08));
+  font-weight: 600;
+}
+
+/* ─── CTA Buttons ─── */
+.site-nav-ctas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.site-nav-cta {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+  color: #fff;
+}
+.site-nav-cta.write {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+.site-nav-cta.search {
+  background: var(--pm-accent, #2563eb);
+}
+.site-nav-cta:hover { opacity: 0.9; }
+
+/* ─── Theme Toggle ─── */
+.site-nav-theme {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--pm-border-thin, rgba(128,128,128,0.2));
+  background: transparent;
+  color: var(--pm-text-muted, #888);
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 0;
+}
+.site-nav-theme:hover {
+  background: var(--pm-surface-container, rgba(0,0,0,0.06));
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+  .site-nav { padding: 8px 14px; gap: 6px; }
+  .site-nav-logo img { width: 24px; height: 24px; }
+  .site-nav-logo span { font-size: 0.95rem; }
+  .site-nav-links a { font-size: 0.8125rem; padding: 4px 10px; }
+  .site-nav-cta { font-size: 0.75rem; padding: 4px 8px; }
+}
+
+@media (max-width: 480px) {
+  .site-nav { padding: 8px 10px; }
+  .site-nav-logo span { display: none; }
+  .site-nav-links { gap: 2px; }
+  .site-nav-links a { font-size: 0.75rem; padding: 4px 7px; }
+  .site-nav-ctas { gap: 4px; }
+  .site-nav-cta { font-size: 0.6875rem; padding: 3px 7px; }
+}

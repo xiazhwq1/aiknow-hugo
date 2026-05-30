@@ -1,0 +1,31 @@
+baseURL: "https://aiknow.org.cn"
+languageCode: "zh-cn"
+title: "AI Know"
+enableEmoji: false
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+params:
+  description: "AI Know — AI早报、技术分析、财经、硬件编程。每日深度解读全球AI产业。"
+  icp: "粤ICP备2026055292号-1"
+
+menu:
+  main:
+    - name: "首页"
+      url: "/"
+      weight: 1
+    - name: "早报"
+      url: "/ai-morning/"
+      weight: 2
+    - name: "AI技术"
+      url: "/ai-tech/"
+      weight: 3
+    - name: "AI财经"
+      url: "/ai-finance/"
+      weight: 4
+    - name: "硬件编程"
+      url: "/hardware/"
+      weight: 5
