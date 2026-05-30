@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '30 22 * * *'   # UTC 22:30 = 北京时间 06:30
+    - cron: '30 22 * * *'
 
 jobs:
   deploy:
@@ -22,11 +22,14 @@ jobs:
         run: hugo --minify
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH Connection
+        run: ssh -i ~/.ssh/deploy_key -o ConnectTimeout=10 ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "echo OK"
 
       - name: Deploy via rsync
-        run: |
-          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
-          rsync -avz --delete public/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/xiaoao/
+        run: rsync -avz --delete -e "ssh -i ~/.ssh/deploy_key -o ConnectTimeout=30" public/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/xiaoao/
