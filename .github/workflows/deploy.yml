@@ -28,8 +28,9 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test SSH Connection
-        run: ssh -i ~/.ssh/deploy_key -o ConnectTimeout=10 ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "echo OK"
-
-      - name: Deploy via rsync
-        run: rsync -avz --delete -e "ssh -i ~/.ssh/deploy_key -o ConnectTimeout=30" public/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/xiaoao/
+      - name: Deploy
+        run: |
+          cd public
+          tar czf /tmp/hugo_build.tar.gz .
+          scp -i ~/.ssh/deploy_key /tmp/hugo_build.tar.gz ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/tmp/
+          ssh -i ~/.ssh/deploy_key ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "cd /var/www/xiaoao && tar xzf /tmp/hugo_build.tar.gz && rm /tmp/hugo_build.tar.gz && echo deployed"
