@@ -1,0 +1,47 @@
+{{ define "main" }}
+<!-- Search Bar -->
+<div class="search-bar-wrap" style="padding:12px 20px;background:var(--surface-2);border-bottom:1px solid var(--border-1);margin:0 -20px">
+  <form class="search-bar" action="/search/" method="get" style="max-width:640px;margin:0 auto;display:flex">
+    <input type="search" name="q" placeholder="搜索 AI 新闻、技术分析、硬件教程..." aria-label="站内搜索" style="flex:1;padding:10px 16px;border:1px solid var(--border-1);border-radius:10px 0 0 10px;background:var(--surface-1);color:var(--text-1);font-size:0.9375rem;outline:none">
+    <button type="submit" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:0 10px 10px 0;font-size:0.9375rem;cursor:pointer">搜索</button>
+  </form>
+  <div style="text-align:center;font-size:0.75rem;color:var(--text-4);margin-top:6px">搜索早报、技术分析、财经、硬件编程等全部内容</div>
+</div>
+
+<!-- Analysis Cards -->
+{{ $cards := .Params.cards }}
+{{ $sections := dict "overview" "今日头条深度分析" "tech" "技术维度" "finance" "财经维度" }}
+{{ $icons := dict "overview" "" "tech" "" "finance" "" }}
+
+{{ $seen := slice }}
+<div style="max-width:780px;margin:0 auto;padding:0 20px">
+{{ range $cards }}
+  {{ if not (in $seen .section) }}
+    {{ $seen = $seen | append .section }}
+    <div class="section" style="margin-bottom:44px">
+    <div class="section-title" style="font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:16px;display:flex;align-items:center;gap:8px">
+      {{ index $sections .section | default .section }}
+    </div>
+  {{ end }}
+    <div class="analysis-card" style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;padding:24px;transition:all 0.2s;margin-bottom:16px">
+      <h2 style="font-size:1.05rem;color:var(--text-1);margin:0 0 10px;font-weight:700">{{ .title }}</h2>
+      <p style="color:var(--text-2);line-height:1.85;margin:0 0 12px;font-size:0.9375rem">{{ .content }}</p>
+      {{ with .quote }}
+      <blockquote style="border-left:3px solid var(--accent);margin:12px 0;padding:8px 16px;color:var(--text-3);font-size:0.875rem">{{ . }}</blockquote>
+      {{ end }}
+    </div>
+  {{ if eq .section "finance" }}
+    </div>
+  {{ end }}
+{{ end }}
+
+<!-- Section Links -->
+<div style="margin-top:32px;padding:20px 0;text-align:center">
+  <a href="/daily/ai-morning/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">早报</a>
+  <a href="/daily/ai-tech/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">AI技术</a>
+  <a href="/daily/ai-finance/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">AI财经</a>
+  <a href="/robots.html" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">硬件编程</a>
+</div>
+
+</div>
+{{ end }}

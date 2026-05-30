@@ -1,5 +1,5 @@
 baseURL: "https://aiknow.org.cn"
-languageCode: "zh-cn"
+locale: "zh-cn"
 title: "AI Know"
 enableEmoji: false
 uglyURLs: true
@@ -30,3 +30,9 @@ menu:
     - name: "硬件编程"
       url: "/hardware/"
       weight: 5
+    - name: "AI工程"
+      url: "/aieng/"
+      weight: 6
+    - name: "Vibe编程"
+      url: "/easyvibe/"
+      weight: 7
