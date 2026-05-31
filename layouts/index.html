@@ -1,4 +1,19 @@
 {{ define "main" }}
+<!-- AI Search -->
+<div style="max-width:600px;margin:0 auto 28px;padding:0 20px">
+  <form action="/kb/" method="get" style="display:flex;gap:8px">
+    <input type="text" name="q" placeholder="AI搜索知识库 — 搜索大模型、芯片、Agent、编程..." autocomplete="off"
+      style="flex:1;padding:12px 18px;border:2px solid var(--border-card);border-radius:28px;
+      background:var(--surface-2);color:var(--text-1);font-size:0.9375rem;outline:none;
+      transition:border-color 0.2s,box-shadow 0.2s"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.08)'"
+      onblur="this.style.borderColor='var(--border-card)';this.style.boxShadow='none'">
+    <button type="submit" style="padding:10px 22px;background:var(--accent);color:#fff;border:none;
+      border-radius:28px;font-size:0.9rem;font-weight:600;cursor:pointer;white-space:nowrap;
+      transition:opacity 0.15s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">AI搜索</button>
+  </form>
+</div>
+
 <div style="max-width:780px;margin:0 auto;padding:0 20px">
 {{ range .Params.cards }}
   <div class="section" style="margin-bottom:44px">
