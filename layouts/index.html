@@ -1,17 +1,18 @@
 {{ define "main" }}
 <!-- AI Search -->
-<div style="max-width:600px;margin:0 auto 28px;padding:0 20px">
-  <form action="/kb/" method="get" style="display:flex;gap:8px">
-    <input type="text" name="q" placeholder="AI搜索知识库 — 搜索大模型、芯片、Agent、编程..." autocomplete="off"
+<div style="max-width:600px;margin:0 auto 28px;padding:0 20px" id="searchBox">
+  <div style="display:flex;gap:8px">
+    <input type="text" id="homeSearch" placeholder="搜索知识库 — 大模型、芯片、Agent、编程..." autocomplete="off"
       style="flex:1;padding:12px 18px;border:2px solid var(--border-card);border-radius:28px;
       background:var(--surface-2);color:var(--text-1);font-size:0.9375rem;outline:none;
       transition:border-color 0.2s,box-shadow 0.2s"
       onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.08)'"
       onblur="this.style.borderColor='var(--border-card)';this.style.boxShadow='none'">
-    <button type="submit" style="padding:10px 22px;background:var(--accent);color:#fff;border:none;
+    <button type="button" id="homeSearchBtn" style="padding:10px 22px;background:var(--accent);color:#fff;border:none;
       border-radius:28px;font-size:0.9rem;font-weight:600;cursor:pointer;white-space:nowrap;
       transition:opacity 0.15s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">AI搜索</button>
-  </form>
+  </div>
+  <div id="homeResults" style="display:none;margin-top:16px"></div>
 </div>
 
 <div style="max-width:780px;margin:0 auto;padding:0 20px">
@@ -45,4 +46,82 @@
 </div>
 
 </div>
+
+<script>
+(function() {
+  const inp = document.getElementById('homeSearch');
+  const btn = document.getElementById('homeSearchBtn');
+  const res = document.getElementById('homeResults');
+  let timer;
+
+  function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function escA(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  async function search(q) {
+    res.style.display = 'block';
+    res.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem">搜索中...</div>';
+    try {
+      const r = await fetch('/kb/api/search?q=' + encodeURIComponent(q));
+      const d = await r.json();
+      const docs = Array.isArray(d) ? d : (d.results || d.documents || []);
+      if (!docs.length) {
+        res.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:0.85rem">无结果</div>';
+        return;
+      }
+      res.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px">找到 ' + docs.length + ' 条结果</div>' +
+        docs.slice(0, 6).map(function(d) {
+          var cat = d.category || d.topic || '';
+          var sn = esc((d.snippet || d.content || '').substring(0, 150));
+          var terms = q.trim().split(/\s+/).filter(Boolean);
+          terms.forEach(function(t) {
+            sn = sn.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<em>$1</em>');
+          });
+          return '<a href="' + escA(d.source_url || '#') + '" style="display:block;padding:12px 16px;margin-bottom:4px;background:var(--surface-2);border:1px solid var(--border-card);border-radius:10px;text-decoration:none;color:var(--text-1);transition:all 0.15s" onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--border-card)\'">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
+              '<span style="font-weight:600;font-size:0.875rem;line-height:1.4">' + esc(d.title || '?') + '</span>' +
+              (cat ? '<span style="font-size:0.65rem;font-weight:600;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;color:' + 
+                (cat==='早报'?'#d97706':cat==='AI技术'?'#7c3aed':cat==='AI财经'?'#059669':'#0891b2') + ';background:' +
+                (cat==='早报'?'rgba(245,158,11,0.1)':cat==='AI技术'?'rgba(139,92,246,0.1)':cat==='AI财经'?'rgba(16,185,129,0.1)':'rgba(6,182,212,0.1)') + '">' + esc(cat) + '</span>' : '') +
+            '</div>' +
+            '<div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + sn + '</div>' +
+          '</a>';
+        }).join('') +
+        (docs.length > 6 ? '<div style="text-align:center;padding:8px"><a href="/kb/?q=' + encodeURIComponent(q) + '" style="color:var(--accent);font-size:0.85rem;font-weight:600;text-decoration:none">查看全部 ' + docs.length + ' 条结果 →</a></div>' : '');
+      var ems = res.querySelectorAll('em');
+      for (var i = 0; i < ems.length; i++) {
+        ems[i].style.cssText = 'background:rgba(37,99,235,0.1);color:var(--accent);font-style:normal;font-weight:600;border-radius:2px;padding:0 2px';
+      }
+    } catch(e) {
+      res.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:0.85rem">搜索失败，请重试</div>';
+    }
+  }
+
+  btn.addEventListener('click', function() {
+    var q = inp.value.trim();
+    if (q.length >= 1) search(q);
+  });
+
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var q = this.value.trim();
+      if (q.length >= 1) search(q);
+    }
+    if (e.key === 'Escape') {
+      this.value = '';
+      res.style.display = 'none';
+      res.innerHTML = '';
+      this.blur();
+    }
+  });
+
+  // Instant search on type
+  inp.addEventListener('input', function() {
+    clearTimeout(timer);
+    var q = this.value.trim();
+    if (!q) { res.style.display = 'none'; res.innerHTML = ''; return; }
+    timer = setTimeout(function() { search(q); }, 300);
+  });
+})();
+</script>
 {{ end }}
