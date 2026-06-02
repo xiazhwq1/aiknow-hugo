@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>写文章 · AI Know 知识库</title>
+    <link rel="stylesheet" href="/assets/css/pro-max.css">
+    <style>
+        .write-container { max-width: 760px; margin: 0 auto; padding: 24px; }
+        .write-header { text-align: center; padding: 40px 0 24px; }
+        .write-header h1 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: var(--pm-text-primary); }
+        .write-header p { color: var(--pm-text-muted); font-size: 0.875rem; margin-top: 4px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--pm-text-secondary); margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 16px; border: 1.5px solid var(--pm-border-thin);
+            border-radius: 10px; background: var(--pm-surface-container);
+            color: var(--pm-text-primary); font-size: 0.9375rem;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit; box-sizing: border-box;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+        }
+
+        /* Toolbar */
+        .editor-toolbar {
+            display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 10px;
+            background: var(--pm-surface-container); border: 1.5px solid var(--pm-border-thin);
+            border-bottom: none; border-radius: 10px 10px 0 0;
+        }
+        .editor-toolbar button {
+            width: 34px; height: 34px; border: 1px solid transparent;
+            border-radius: 6px; background: transparent; color: var(--pm-text-secondary);
+            font-size: 1rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: all 0.15s;
+        }
+        .editor-toolbar button:hover { background: rgba(139,92,246,0.08); color: #8b5cf6; border-color: rgba(139,92,246,0.2); }
+        .editor-toolbar button:active { transform: scale(0.95); }
+        .editor-toolbar .sep { width: 1px; background: var(--pm-border-thin); margin: 4px 6px; align-self: stretch; }
+
+        .form-group textarea {
+            width: 100%; padding: 12px 16px; border: 1.5px solid var(--pm-border-thin);
+            border-radius: 0 0 10px 10px; border-top: none;
+            background: var(--pm-surface-container);
+            color: var(--pm-text-primary); font-size: 0.9375rem;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: "SF Mono", "Fira Code", "Menlo", monospace;
+            box-sizing: border-box; min-height: 360px; resize: vertical; line-height: 1.7;
+        }
+        .form-group textarea:focus { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
+        .editor-wrapper:focus-within .editor-toolbar { border-color: #8b5cf6; }
+        .editor-wrapper:focus-within textarea { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
+
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+
+        .btn-publish {
+            display: block; width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff; border: none; border-radius: 12px;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .btn-publish:hover { opacity: 0.92; }
+        .btn-publish:active { transform: scale(0.98); }
+        .btn-publish:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .success-box, .error-box {
+            padding: 14px 18px; border-radius: 10px; margin-bottom: 20px;
+            font-size: 0.875rem; display: none;
+        }
+        .success-box { background: rgba(16,185,129,0.08); border: 1px solid #10b981; color: #059669; }
+        .error-box { background: rgba(239,68,68,0.08); border: 1px solid #ef4444; color: #dc2626; }
+
+        @media (max-width: 480px) {
+            .write-container { padding: 16px; }
+            .form-row { flex-direction: column; gap: 0; }
+            .write-header { padding: 24px 0 16px; }
+            .editor-toolbar { gap: 2px; padding: 6px; }
+            .editor-toolbar button { width: 30px; height: 30px; font-size: 0.9rem; }
+            .editor-toolbar .sep { margin: 3px 4px; }
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/css/site-nav.css">
+</head>
+<body>
+    <nav class="site-nav">
+    <a href="/" class="site-nav-logo"><img src="/assets/img/logo.png" alt=""><span>AI Know</span></a>
+    <div class="site-nav-links">
+        <a href="/">首页</a>
+        <a href="/daily/ai-morning/">早报</a>
+        <a href="/daily/ai-tech/">AI技术</a>
+        <a href="/daily/ai-finance/">AI财经</a>
+        <a href="/ideas/">有趣点子</a>
+        <a href="/hardware/">硬件编程</a>
+        <a href="/aieng/">AI工程</a>
+        <a href="/easyvibe/">Vibe编程</a>
+    </div>
+    <div class="site-nav-ctas">
+        <a href="/kb/write.html" class="site-nav-cta write">写文章</a>
+        <a href="/search/" class="site-nav-cta search">AI搜索</a>
+    </div>
+</nav>
+
+    <div class="write-container">
+        <div class="write-header">
+            <h1>✏️ 分享你的知识</h1>
+            <p>Markdown 格式写作，发布到 AI Know 知识库</p>
+        </div>
+
+        <div class="success-box" id="successBox"></div>
+        <div class="error-box" id="errorBox"></div>
+
+        <div class="form-group">
+            <label>文章标题 *</label>
+            <input type="text" id="titleInput" placeholder="给你的文章起个标题…" maxlength="200">
+        </div>
+
+        <div class="form-group">
+            <label>内容（Markdown）*</label>
+            <div class="editor-wrapper">
+                <div class="editor-toolbar">
+                    <button title="加粗 (Ctrl+B)" onclick="insertMarkdown('**', '**', '加粗文本')"><b>B</b></button>
+                    <button title="斜体 (Ctrl+I)" onclick="insertMarkdown('*', '*', '斜体文本')"><i>I</i></button>
+                    <button title="删除线" onclick="insertMarkdown('~~', '~~', '删除文本')"><s>S</s></button>
+                    <span class="sep"></span>
+                    <button title="二级标题" onclick="insertLineStart('## ')">H2</button>
+                    <button title="三级标题" onclick="insertLineStart('### ')">H3</button>
+                    <span class="sep"></span>
+                    <button title="链接" onclick="insertLink()">🔗</button>
+                    <button title="图片" onclick="insertImage()">🖼</button>
+                    <button title="行内代码" onclick="insertMarkdown('`', '`', '代码')">&lt;/&gt;</button>
+                    <button title="代码块" onclick="insertBlock('```\n', '\n```')">📋</button>
+                    <span class="sep"></span>
+                    <button title="无序列表" onclick="insertLineStart('- ')">•</button>
+                    <button title="有序列表" onclick="insertOrderedList()">1.</button>
+                    <button title="引用" onclick="insertLineStart('> ')">❝</button>
+                    <button title="分割线" onclick="insertBlock('\n---\n', '')">—</button>
+                </div>
+                <textarea id="contentInput" placeholder="## 开始写作…
+
+支持 Markdown 格式，或使用上方工具栏快捷插入"></textarea>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>你的昵称</label>
+                <input type="text" id="authorInput" placeholder="让大家记住你…" maxlength="32" value="">
+            </div>
+            <div class="form-group">
+                <label>标签（逗号分隔）</label>
+                <input type="text" id="tagsInput" placeholder="AI, 编程, 产品…" maxlength="200">
+            </div>
+        </div>
+
+        <button class="btn-publish" id="publishBtn" onclick="publish()">🚀 发布文章</button>
+        <p style="text-align:center;margin-top:12px;font-size:0.75rem;color:var(--pm-text-muted)">
+            发布即表示同意将文章公开在 AI Know 知识库 · 
+            <a href="/kb/" style="color:var(--pm-accent)">返回搜索</a>
+        </p>
+    </div>
+
+    <script>
+    // ====== Toolbar helpers ======
+    var ta = null;
+    document.addEventListener('DOMContentLoaded', function() { ta = document.getElementById('contentInput'); });
+
+    function insertMarkdown(before, after, placeholder) {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart, e = ta.selectionEnd;
+        var sel = ta.value.substring(s, e) || placeholder;
+        ta.value = ta.value.substring(0, s) + before + sel + after + ta.value.substring(e);
+        ta.focus();
+        ta.selectionStart = s + before.length;
+        ta.selectionEnd = s + before.length + sel.length;
+    }
+
+    function insertLineStart(prefix) {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart;
+        var before = ta.value.substring(0, s);
+        // Back to start of line
+        var lineStart = before.lastIndexOf('\n') + 1;
+        ta.value = ta.value.substring(0, lineStart) + prefix + ta.value.substring(lineStart);
+        ta.focus();
+        var ns = lineStart + prefix.length;
+        ta.selectionStart = ns;
+        ta.selectionEnd = ns;
+    }
+
+    function insertLink() {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart, e = ta.selectionEnd;
+        var sel = ta.value.substring(s, e) || '链接文字';
+        var url = prompt('输入链接地址：', 'https://');
+        if (!url) return;
+        ta.value = ta.value.substring(0, s) + '[' + sel + '](' + url + ')' + ta.value.substring(e);
+        ta.focus();
+    }
+
+    function insertImage() {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart;
+        var alt = prompt('图片描述：', '图片') || '图片';
+        var url = prompt('图片链接：', 'https://');
+        if (!url) return;
+        ta.value = ta.value.substring(0, s) + '![' + alt + '](' + url + ')' + ta.value.substring(s);
+        ta.focus();
+    }
+
+    function insertBlock(before, after) {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart, e = ta.selectionEnd;
+        var sel = ta.value.substring(s, e);
+        var pad = ta.value.substring(0, s).endsWith('\n') ? '' : '\n';
+        ta.value = ta.value.substring(0, s) + pad + before + sel + after + '\n' + ta.value.substring(e);
+        ta.focus();
+    }
+
+    function insertOrderedList() {
+        if (!ta) { ta = document.getElementById('contentInput'); }
+        var s = ta.selectionStart;
+        var lineStart = ta.value.substring(0, s).lastIndexOf('\n') + 1;
+        ta.value = ta.value.substring(0, lineStart) + '1. ' + ta.value.substring(lineStart);
+        ta.focus();
+        var ns = lineStart + 3;
+        ta.selectionStart = ns;
+        ta.selectionEnd = ns;
+    }
+
+    // ====== Keyboard shortcuts ======
+    document.addEventListener('keydown', function(e) {
+        if (e.target.id !== 'contentInput') return;
+        if ((e.metaKey || e.ctrlKey) && e.key === 'b') { e.preventDefault(); insertMarkdown('**', '**', '加粗文本'); }
+        if ((e.metaKey || e.ctrlKey) && e.key === 'i') { e.preventDefault(); insertMarkdown('*', '*', '斜体文本'); }
+    });
+
+    // ====== Existing publish logic ======
+    function slugify(text) {
+        return text.toLowerCase().trim()
+            .replace(/[^\w\u4e00-\u9fff]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .substring(0, 60) + '-' + Date.now().toString(36);
+    }
+
+    async function publish() {
+        var title = document.getElementById('titleInput').value.trim();
+        var content = document.getElementById('contentInput').value.trim();
+        var author = document.getElementById('authorInput').value.trim() || '匿名用户';
+        var tags = document.getElementById('tagsInput').value.trim();
+
+        var errBox = document.getElementById('errorBox');
+        var sucBox = document.getElementById('successBox');
+        var btn = document.getElementById('publishBtn');
+        errBox.style.display = 'none';
+        sucBox.style.display = 'none';
+
+        if (!title) { showError('请输入文章标题'); return; }
+        if (!content) { showError('请输入文章内容'); return; }
+        if (content.length < 10) { showError('内容太短，至少10个字符'); return; }
+
+        btn.disabled = true;
+        btn.textContent = '⏳ 发布中…';
+
+        try {
+            var resp = await fetch('/kb/api/blog', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: title,
+                    slug: slugify(title),
+                    content_md: content,
+                    summary: content.replace(/[#*[\]`>\-]/g,'').substring(0, 200),
+                    tags: tags,
+                    status: 'published',
+                    author_name: author
+                })
+            });
+
+            if (!resp.ok) {
+                var errData = await resp.json().catch(function(){ return {}; });
+                throw new Error(errData.detail || '发布失败 (HTTP ' + resp.status + ')');
+            }
+
+            var data = await resp.json();
+            sucBox.innerHTML = '✅ 文章发布成功！<a href="/kb/blog/' + data.slug + '.html" style="color:#059669;font-weight:600">查看你的文章 →</a>';
+            sucBox.style.display = 'block';
+            btn.textContent = '✅ 已发布';
+            setTimeout(function() { btn.textContent = '🚀 再写一篇'; btn.disabled = false; }, 2000);
+
+        } catch (e) {
+            showError(e.message);
+            btn.disabled = false;
+            btn.textContent = '🚀 发布文章';
+        }
+    }
+
+    function showError(msg) {
+        var errBox = document.getElementById('errorBox');
+        errBox.textContent = '⚠️ ' + msg;
+        errBox.style.display = 'block';
+        setTimeout(function() { errBox.style.display = 'none'; }, 5000);
+    }
+    </script>
+</body>
+</html>
