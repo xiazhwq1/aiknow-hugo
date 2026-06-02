@@ -136,9 +136,8 @@
 
     function speakNext() {
       if (currentIdx >= chunks.length) {
-        stopReading();
-        currentIdx = 0;
-        updateProgress();
+        // All chunks done — play outro music
+        playOutro();
         return;
       }
       const utterance = new SpeechSynthesisUtterance(chunks[currentIdx]);
@@ -155,6 +154,38 @@
         speakNext();
       };
       synth.speak(utterance);
+    }
+
+    function playOutro() {
+      isPlaying = false;
+      playBtn.textContent = '🎵';
+      progressBar.style.width = '100%';
+      const outro = new Audio('/assets/audio/tts_outro.mp3');
+      outro.volume = 0.7;
+      outro.onended = function() {
+        stopReading();
+        currentIdx = 0;
+        updateProgress();
+        mainBtn.textContent = '🔊';
+        bar.classList.remove('show');
+        barVisible = false;
+      };
+      outro.onerror = function() {
+        stopReading();
+        currentIdx = 0;
+        updateProgress();
+        mainBtn.textContent = '🔊';
+        bar.classList.remove('show');
+        barVisible = false;
+      };
+      outro.play().catch(function() {
+        stopReading();
+        currentIdx = 0;
+        updateProgress();
+        mainBtn.textContent = '🔊';
+        bar.classList.remove('show');
+        barVisible = false;
+      });
     }
 
     function startReading() {
