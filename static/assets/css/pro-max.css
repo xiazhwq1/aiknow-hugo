@@ -297,7 +297,15 @@
   }
 
   body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     background-color: var(--pm-surface-page);
+  }
+
+  /* main content fills space, pushes footer down naturally */
+  main, .main-content, article, .container:first-of-type {
+    flex: 1;
   }
 
   /* ── Typography ────────────────────────────────────────────────────── */
