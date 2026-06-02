@@ -10,6 +10,13 @@
     <time style="font-size:0.8125rem;color:var(--text-4)">{{ .Date.Format "2006年01月02日" }}</time>
   </header>
 
+  {{ if .Params.audio }}
+  <div style="margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:12px;padding:16px 20px">
+    <div style="font-size:0.85em;color:var(--text-soft);margin-bottom:10px">完整版（男声+配乐+收尾曲）</div>
+    <audio controls preload="metadata" style="width:100%;height:40px" src="{{ .Params.audio }}"></audio>
+  </div>
+  {{ end }}
+
   <div class="content" style="font-size:0.9375rem;color:var(--text-2);line-height:1.9">
     {{ .Content }}
   </div>
