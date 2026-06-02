@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>搜索 - AI Know</title>
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/pro-max.css">
+<link rel="stylesheet" href="/assets/css/site-nav.css">
+<script src="/assets/js/analytics.js"></script>
+<style>
+  .search-page { max-width: 720px; margin: 60px auto; padding: 0 20px 40px; }
+  .search-page h1 { font-size: 1.4rem; color: var(--text-1); margin-bottom: 20px; }
+  .search-box { display: flex; gap: 8px; margin-bottom: 8px; }
+  #search-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border-2); border-radius: 10px; background: var(--surface-1); color: var(--text-1); font-size: 1rem; outline: none; }
+  #search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  #search-btn { padding: 12px 20px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: 600; }
+  #search-btn:hover { opacity: 0.9; }
+  .search-hint { color: var(--text-4); font-size: 0.8rem; margin-bottom: 20px; }
+  .result-count { color: var(--text-3); font-size: 0.85rem; margin-bottom: 16px; }
+  #results { margin-top: 8px; }
+  .result-item { padding: 16px 0; border-bottom: 1px solid var(--border-2); }
+  .result-item:last-child { border-bottom: none; }
+  .result-item .r-title { color: var(--accent); text-decoration: none; font-size: 1.05rem; font-weight: 600; display: block; margin-bottom: 4px; }
+  .result-item .r-title:hover { text-decoration: underline; }
+  .result-item .r-url { color: var(--text-4); font-size: 0.75rem; margin-bottom: 4px; word-break: break-all; }
+  .result-item .r-desc { color: var(--text-3); font-size: 0.875rem; line-height: 1.6; }
+  .result-item em { background: rgba(251,191,36,0.25); font-style: normal; padding: 1px 3px; border-radius: 3px; }
+  .loading { text-align: center; color: var(--text-4); padding: 40px 0; }
+  .no-results { text-align: center; color: var(--text-4); padding: 40px 0; font-size: 0.95rem; }
+  .no-results b { color: var(--text-2); }
+  @media(max-width:768px){.search-page{margin:30px auto}}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="/" class="site-nav-logo"><img src="/assets/img/logo.png" alt=""><span>AI Know</span></a>
+  <div class="site-nav-links">
+    <a href="/">首页</a>
+    <a href="/daily/ai-morning/">早报</a>
+    <a href="/daily/ai-tech/">AI技术</a>
+    <a href="/daily/ai-finance/">AI财经</a>
+    <a href="/ideas/">有趣点子</a>
+    <a href="/hardware/">硬件编程</a>
+    <a href="/aieng/">AI工程</a>
+    <a href="/easyvibe/">Vibe编程</a>
+  </div>
+  <div class="site-nav-ctas">
+    <a href="/kb/write.html" class="site-nav-cta write">写文章</a>
+    <a href="/search/" class="site-nav-cta search">AI搜索</a>
+  </div>
+</nav>
+
+<div class="search-page">
+  <h1>站内搜索</h1>
+  <div class="search-box">
+    <input type="search" id="search-input" placeholder="搜索 AI 新闻、技术分析、硬件教程..." autofocus>
+    <button id="search-btn">搜索</button>
+  </div>
+  <p class="search-hint">共 <span id="index-count">…</span> 页已索引 · 支持中文分词搜索</p>
+  <div id="results"><div class="loading">加载搜索索引中…</div></div>
+</div>
+
+<footer style="text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--border-card)">
+  <p style="color:var(--text-muted);font-size:0.8em">AI Know · 小铭米出品</p>
+  <p class="icp" style="font-size:0.75em"><a href="https://beian.miit.gov.cn" target="_blank" rel="noopener" style="color:var(--text-muted);text-decoration:none">粤ICP备2026055292号-1</a></p>
+</footer>
+
+<script src="/assets/js/theme.js"></script>
+<script>
+(function() {
+  var idx = [];
+  var loaded = false;
+
+  // Fetch index
+  fetch('/search/index.json?v=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      idx = data;
+      loaded = true;
+      document.getElementById('index-count').textContent = data.length.toLocaleString();
+      document.getElementById('results').innerHTML = '';
+      // Check URL for query
+      var q = new URLSearchParams(location.search).get('q');
+      if (q) {
+        document.getElementById('search-input').value = q;
+        doSearch(q);
+      }
+    })
+    .catch(function(e) {
+      document.getElementById('results').innerHTML = '<div class="loading">索引加载失败，请刷新重试</div>';
+    });
+
+  function tokenize(text) {
+    // Simple CJK bigram tokenizer + word split for English
+    var tokens = [];
+    var cjk = '';
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (/[\u4e00-\u9fff\u3400-\u4dbf]/.test(c)) {
+        cjk += c;
+      } else {
+        if (cjk) {
+          for (var j = 0; j < cjk.length; j++) tokens.push(cjk[j]);
+          for (var j = 0; j < cjk.length - 1; j++) tokens.push(cjk[j] + cjk[j+1]);
+          cjk = '';
+        }
+        if (/[a-zA-Z0-9]/.test(c)) tokens.push(c.toLowerCase());
+      }
+    }
+    if (cjk) {
+      for (var j = 0; j < cjk.length; j++) tokens.push(cjk[j]);
+      for (var j = 0; j < cjk.length - 1; j++) tokens.push(cjk[j] + cjk[j+1]);
+    }
+    return tokens;
+  }
+
+  function highlight(text, query) {
+    var terms = query.split(/\s+/).filter(Boolean);
+    var result = text;
+    terms.forEach(function(t) {
+      var re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      result = result.replace(re, '<em>$1</em>');
+    });
+    return result;
+  }
+
+  function doSearch(query) {
+    if (!loaded) return;
+    query = query.trim();
+    if (!query) return;
+
+    var terms = query.split(/\s+/).filter(function(t) { return t.length > 0; });
+    if (!terms.length) return;
+
+    var results = [];
+    for (var i = 0; i < idx.length; i++) {
+      var page = idx[i];
+      var text = (page.title + ' ' + page.desc + ' ' + page.text).toLowerCase();
+      var score = 0;
+      for (var j = 0; j < terms.length; j++) {
+        var t = terms[j].toLowerCase();
+        var count = (text.match(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')) || []).length;
+        if (count > 0) {
+          // Title match bonus
+          if (page.title.toLowerCase().indexOf(t) >= 0) count *= 3;
+          score += count;
+        }
+      }
+      if (score > 0) {
+        results.push({ page: page, score: score });
+      }
+    }
+
+    results.sort(function(a, b) { return b.score - a.score; });
+
+    var html = '';
+    if (results.length === 0) {
+      html = '<div class="no-results">未找到包含 <b>' + query + '</b> 的内容<br><br>试试其他关键词？</div>';
+    } else {
+      html = '<div class="result-count">找到 ' + results.length + ' 条结果</div>';
+      for (var k = 0; k < Math.min(results.length, 50); k++) {
+        var r = results[k];
+        var p = r.page;
+        var desc = p.desc || p.text || '';
+        desc = desc.substring(0, 180);
+        desc = highlight(desc, query);
+        html += '<div class="result-item">' +
+          '<a class="r-title" href="' + p.url + '">' + highlight(p.title, query) + '</a>' +
+          '<div class="r-url">' + p.url + '</div>' +
+          '<div class="r-desc">' + desc + '</div>' +
+          '</div>';
+      }
+      if (results.length > 50) {
+        html += '<p style="color:var(--text-4);text-align:center;margin-top:12px">仅显示前50条，请细化搜索词</p>';
+      }
+    }
+    document.getElementById('results').innerHTML = html;
+  }
+
+  var input = document.getElementById('search-input');
+  var btn = document.getElementById('search-btn');
+  var timer;
+
+  input.addEventListener('input', function() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      doSearch(input.value);
+    }, 300);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      clearTimeout(timer);
+      doSearch(input.value);
+    }
+  });
+
+  btn.addEventListener('click', function() {
+    doSearch(input.value);
+  });
+})();
+</script>
+</body>
+</html>
