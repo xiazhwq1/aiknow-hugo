@@ -1,13 +1,24 @@
+{{ define "middle_title" }}{{ .CurrentSection.Title }}{{ end }}
+
+{{ define "middle" }}
+  {{ $pages := .CurrentSection.Pages.ByDate.Reverse }}
+  {{ range $pages }}
+  <a href="{{ .RelPermalink }}" class="middle-item{{ if eq .File.UniqueID $.File.UniqueID }} middle-item--active{{ end }}">
+    <span class="middle-item-date">
+      <span class="day">{{ .Date.Format "02" }}</span>
+      <span class="month">{{ .Date.Format "Jan" }}</span>
+    </span>
+    <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
+  </a>
+  {{ end }}
+{{ end }}
+
 {{ define "main" }}
 <article>
   <header style="text-align:center;padding:48px 0 32px">
     <h1><span style="background:linear-gradient(135deg,#6c8cff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">{{ .Title }}</span></h1>
-    <div class="date-badge">
-      {{ .Date.Format "2006-01-02 Monday" }}
-    </div>
-    {{ with .Params.tagline }}
-    <p style="margin-top:10px;color:var(--text-muted);font-size:0.85em">{{ . }}</p>
-    {{ end }}
+    <div class="date-badge">{{ .Date.Format "2006-01-02 Monday" }}</div>
+    {{ with .Params.tagline }}<p style="margin-top:10px;color:var(--text-muted);font-size:0.85em">{{ . }}</p>{{ end }}
   </header>
 
   {{ if .Params.audio }}
@@ -17,9 +28,7 @@
   </div>
   {{ end }}
 
-  <div class="analysis-section">
-    {{ .Content }}
-  </div>
+  <div class="analysis-section">{{ .Content }}</div>
 
   {{ with .Params.topics }}
   <div class="sources-section">

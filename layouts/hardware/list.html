@@ -1,3 +1,17 @@
+{{ define "middle_title" }}{{ .Title }}{{ end }}
+
+{{ define "middle" }}
+  {{ range .Pages.ByDate.Reverse }}
+  <a href="{{ printf "/esp32/%s.html" (.Date.Format "2006-01-02") }}" class="middle-item">
+    <span class="middle-item-date">
+      <span class="day">{{ .Date.Format "02" }}</span>
+      <span class="month">{{ .Date.Format "Jan" }}</span>
+    </span>
+    <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
+  </a>
+  {{ end }}
+{{ end }}
+
 {{ define "main" }}
 <div class="aihot-hero">
   <h1>{{ .Title }}</h1>
@@ -11,7 +25,7 @@
     {{ $score := "high" }}{{ if gt $count 5 }}{{ $score = "mid" }}{{ end }}{{ if gt $count 12 }}{{ $score = "low" }}{{ end }}
   <div class="aihot-card">
     <div class="aihot-card-header">
-      <span class="aihot-source-name" style="font-weight:600">{{ .Site.Title }}</span>
+      <span class="aihot-source-name" style="font-weight:600">{{ .Date.Format "Monday" }}</span>
       <span class="aihot-score aihot-score--{{ $score }}">精选{{ $count }}</span>
     </div>
     <a href="{{ printf "/esp32/%s.html" (.Date.Format "2006-01-02") }}" class="aihot-card-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</a>

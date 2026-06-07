@@ -1,8 +1,23 @@
+{{ define "middle_title" }}精选首页{{ end }}
+
+{{ define "middle" }}
+  {{ $pages := where .Site.RegularPages "Section" "in" (slice "daily" "hardware" "ideas") }}
+  {{ range first 20 ($pages.ByDate.Reverse) }}
+  <a href="{{ .RelPermalink }}" class="middle-item">
+    <span class="middle-item-date">
+      <span class="day">{{ .Date.Format "02" }}</span>
+      <span class="month">{{ .Date.Format "Jan" }}</span>
+    </span>
+    <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
+  </a>
+  {{ end }}
+{{ end }}
+
 {{ define "main" }}
 <!-- AIHOT-style Header -->
 <div class="aihot-hero">
   <h1>AI 自动挑选的高价值内容</h1>
-  <p class="aihot-tagline" style="font-size:0.8125rem;color:var(--pm-text-muted)">{{ now.Format "2006-01-02 Monday" }}</p>
+  <p class="aihot-tagline">{{ now.Format "2006-01-02 Monday" }}</p>
 </div>
 
 <!-- AIHOT Feed -->

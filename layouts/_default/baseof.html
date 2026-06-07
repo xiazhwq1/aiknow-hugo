@@ -3,16 +3,13 @@
 <head>
   {{ partial "head.html" . }}
   <style>
-    /* ─── Mobile Responsive ─── */
     @media (max-width: 900px) {
-      .app-shell { grid-template-columns: 52px minmax(0,1fr) !important; }
+      .app-shell { grid-template-columns: 52px 200px minmax(0,1fr) !important; }
       .app-sidebar { width: 52px !important; padding: 12px 8px !important; }
-      .sidebar-label, .sidebar-logo-hot, .sidebar-brand { display: none !important; }
+      .sidebar-label, .sidebar-logo-hot, .sidebar-logo-orbit { display: none !important; }
       .sidebar-logo { justify-content: center !important; }
-      .sidebar-link { justify-content: center !important; padding: 8px 0 !important; }
+      .sidebar-link { justify-content: center !important; padding: 10px 0 !important; }
       .sidebar-icon { margin: 0 !important; }
-
-      .app-middle { display: none !important; }
     }
     @media (max-width: 640px) {
       .app-shell { grid-template-columns: 1fr !important; }
@@ -26,22 +23,15 @@
     <!-- 左栏：一级菜单 -->
     {{ partial "sidebar.html" . }}
 
-    <!-- 中栏：二级筛选 -->
+    <!-- 中栏：栏目文章列表 -->
     <div class="app-middle">
-      <div class="middle-title">筛选</div>
-      <nav class="middle-nav">
-        {{ block "middle" . }}
-        <a href="/" class="middle-link{{ if .IsHome }} middle-link--active{{ end }}">全部</a>
-        <a href="/daily/ai-morning/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-morning" }} middle-link--active{{ end }}">早报</a>
-        <a href="/daily/ai-tech/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-tech" }} middle-link--active{{ end }}">AI技术</a>
-        <a href="/daily/ai-finance/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-finance" }} middle-link--active{{ end }}">AI财经</a>
-        <a href="/hardware/" class="middle-link{{ if hasPrefix .RelPermalink "/hardware" }} middle-link--active{{ end }}">硬件</a>
-        <a href="/ideas/" class="middle-link{{ if hasPrefix .RelPermalink "/ideas" }} middle-link--active{{ end }}">点子</a>
-        {{ end }}
+      <div class="middle-header">{{ block "middle_title" . }}{{ .Title }}{{ end }}</div>
+      <nav class="middle-list">
+        {{ block "middle" . }}{{ end }}
       </nav>
     </div>
 
-    <!-- 右栏：详细内容 -->
+    <!-- 右栏：文章详细内容 -->
     <main class="app-main">
       {{ block "main" . }}{{ end }}
     </main>
