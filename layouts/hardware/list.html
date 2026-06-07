@@ -2,7 +2,7 @@
 
 {{ define "middle" }}
   {{ range .Pages.ByDate.Reverse }}
-  <a href="{{ printf "/esp32/%s.html" (.Date.Format "2006-01-02") }}" class="middle-item">
+  <a href="{{ .RelPermalink }}" class="middle-item">
     <span class="middle-item-date">
       <span class="day">{{ .Date.Format "02" }}</span>
       <span class="month">{{ .Date.Format "Jan" }}</span>
