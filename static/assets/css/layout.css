@@ -326,12 +326,11 @@ footer {
   .app-main { padding: 24px 16px 40px; }
 }
 
-/* Mobile: full-width, sidebar hidden */
+/* Mobile: full-width, sidebar overlay */
 @media (max-width: 640px) {
   .app-shell {
     grid-template-columns: 1fr;
   }
-  .app-sidebar { display: none; }
   .app-middle { display: none; }
   .app-main { padding: 16px 12px 32px; }
 }
