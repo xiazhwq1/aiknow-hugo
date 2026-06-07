@@ -1,147 +1,60 @@
 {{ define "main" }}
-<!-- AI Search -->
-<div style="max-width:600px;margin:0 auto 28px;padding:0 20px" id="searchBox">
-  <div style="display:flex;gap:8px">
-    <input type="text" id="homeSearch" placeholder="搜索知识库 — 大模型、芯片、Agent、编程..." autocomplete="off"
-      style="flex:1;padding:12px 18px;border:2px solid var(--border-card);border-radius:28px;
-      background:var(--surface-2);color:var(--text-1);font-size:0.9375rem;outline:none;
-      transition:border-color 0.2s,box-shadow 0.2s"
-      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.08)'"
-      onblur="this.style.borderColor='var(--border-card)';this.style.boxShadow='none'">
-    <button type="button" id="homeSearchBtn" style="padding:10px 22px;background:var(--accent);color:#fff;border:none;
-      border-radius:28px;font-size:0.9rem;font-weight:600;cursor:pointer;white-space:nowrap;
-      transition:opacity 0.15s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">AI搜索</button>
-  </div>
-  <div id="homeResults" style="display:none;margin-top:16px"></div>
+<!-- Category Tabs (AIHOT style) -->
+<div class="aihot-tabs" style="padding-top:16px">
+  <a href="/daily/ai-morning/" class="aihot-tab">早报</a>
+  <a href="/daily/ai-tech/" class="aihot-tab active">AI技术</a>
+  <a href="/daily/ai-finance/" class="aihot-tab">AI财经</a>
+  <a href="/hardware/" class="aihot-tab">硬件编程</a>
+  <a href="/ideas/" class="aihot-tab">有趣点子</a>
 </div>
 
-<div style="max-width:780px;margin:0 auto;padding:0 20px">
-{{ range .Params.cards }}
-  <div class="section" style="margin-bottom:44px">
-    <div class="section-title" style="font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:16px;display:flex;align-items:center;gap:8px">
-      {{ if eq .section "overview" }}今日头条深度分析
-      {{ else if eq .section "tech" }}技术维度
-      {{ else if eq .section "finance" }}财经维度
-      {{ else }}{{ .section }}{{ end }}
+<!-- AIHOT Feed -->
+<div class="aihot-feed" style="padding-top:0">
+  
+  {{ range .Params.cards }}
+  <div class="aihot-card">
+    <!-- Header: Source + Score -->
+    <div class="aihot-card-header">
+      <div class="aihot-source">
+        <div class="aihot-avatar">{{ if eq .section "overview" }}AI{{ else if eq .section "tech" }}🔬{{ else if eq .section "finance" }}📈{{ else if eq .section "hardware" }}⚡{{ else }}💡{{ end }}</div>
+        <span class="aihot-source-name">
+          {{ if eq .section "overview" }}AI早报{{ else if eq .section "tech" }}AI技术{{ else if eq .section "finance" }}AI财经{{ else if eq .section "hardware" }}硬件编程{{ else }}有趣点子{{ end }}
+        </span>
+      </div>
+      <span class="aihot-score aihot-score--high">精选</span>
     </div>
-    <div class="analysis-card" style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;padding:24px;transition:all 0.2s;margin-bottom:16px">
-      <h2 style="font-size:1.05rem;color:var(--text-1);margin:0 0 10px;font-weight:700">{{ .title }}</h2>
-      <p style="color:var(--text-2);line-height:1.85;margin:0 0 12px;font-size:0.9375rem">{{ .content }}</p>
-      {{ with .quote }}
-      <blockquote style="border-left:3px solid var(--accent);margin:12px 0;padding:8px 16px;color:var(--text-3);font-size:0.875rem">{{ . }}</blockquote>
-      {{ end }}
-      {{ with .link }}
-      <a href="{{ . }}" class="read-more" style="display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:0.875rem;font-weight:600;text-decoration:none;margin-top:8px;transition:gap 0.2s">阅读全文 →</a>
-      {{ end }}
+
+    <!-- Title -->
+    <a href="{{ with .link }}{{ . }}{{ else }}#{{ end }}" class="aihot-card-title">{{ .title }}</a>
+
+    <!-- Description -->
+    <p class="aihot-card-desc">{{ .content }}</p>
+
+    {{ with .quote }}
+    <!-- Quote / recommendation -->
+    <div class="aihot-reco">
+      <span class="aihot-reco-label">推荐理由：</span>{{ . }}
     </div>
+    {{ end }}
+
+    {{ with .link }}
+    <!-- Read more -->
+    <div class="aihot-card-footer">
+      <span class="aihot-timestamp">📅 今日</span>
+      <a href="{{ . }}" class="read-more" style="color:var(--pm-accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:gap 0.2s">阅读全文 →</a>
+    </div>
+    {{ end }}
   </div>
-{{ end }}
-
-<!-- Section Links -->
-<div style="margin-top:32px;padding:20px 0;text-align:center">
-  <a href="/daily/ai-morning/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">早报</a>
-  <a href="/daily/ai-tech/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">AI技术</a>
-  <a href="/daily/ai-finance/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">AI财经</a>
-  <a href="/hardware/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">硬件编程</a>
-  <a href="/ideas/" class="card-link" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;margin:4px">有趣点子</a>
-</div>
+  {{ end }}
 
 </div>
 
-<script>
-(function() {
-  const inp = document.getElementById('homeSearch');
-  const btn = document.getElementById('homeSearchBtn');
-  const res = document.getElementById('homeResults');
-  let ac;
-
-  function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function escA(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  async function doAsk(q) {
-    res.style.display = 'block';
-    res.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.85rem">AI 正在分析知识库...</div>';
-    try {
-      const r = await fetch('/kb/api/ask?q=' + encodeURIComponent(q));
-      if (!r.ok) throw new Error('fail');
-      const d = await r.json();
-      let a = esc(d.answer || '');
-      a = a.replace(/\[来源(\d+)\]/g, function(_, n) {
-        return '<sup><a class="hsi" href="#hs' + n + '" onclick="var e=document.getElementById(\'hs'+n+'\');e&&e.scrollIntoView({behavior:\'smooth\',block:\'center\'});return false">[' + n + ']</a></sup>';
-      });
-      let h = '<div style="border:1px solid var(--accent);border-radius:14px;padding:20px 22px;background:linear-gradient(135deg,rgba(37,99,235,0.03),var(--surface-2));margin-bottom:8px">';
-      h += '<div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:12px">AI 智能回答</div>';
-      h += '<div style="font-size:0.9rem;line-height:1.85;color:var(--text-1)">' + a + '</div>';
-      if (d.sources && d.sources.length) {
-        h += '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-card)">';
-        h += '<div style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:8px">参考 ' + d.sources.length + ' 篇来源</div>';
-        d.sources.forEach(function(s, i) {
-          h += '<div id="hs'+(i+1)+'" style="display:flex;gap:8px;padding:5px 0;font-size:0.8rem;align-items:flex-start">';
-          h += '<span style="width:22px;height:22px;line-height:22px;text-align:center;background:rgba(37,99,235,0.08);color:var(--accent);border-radius:5px;font-size:0.65rem;font-weight:700;flex-shrink:0">'+(i+1)+'</span>';
-          h += '<div>';
-          if (s.source_url) {
-            h += '<a href="'+escA(s.source_url)+'" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:500">'+esc(s.title)+'</a>';
-          } else {
-            h += '<span style="font-weight:600">'+esc(s.title)+'</span>';
-          }
-          if (s.snippet) h += '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px">'+esc(s.snippet.substring(0,120))+'</div>';
-          h += '</div></div>';
-        });
-        h += '</div>';
-      }
-      h += '</div>';
-      res.innerHTML = h;
-      // Style inline citation links
-      var cis = res.querySelectorAll('.hsi');
-      for (var i = 0; i < cis.length; i++) {
-        cis[i].style.cssText = 'display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;background:rgba(37,99,235,0.08);color:var(--accent);border-radius:4px;font-size:0.65rem;font-weight:700;margin:0 1px;vertical-align:super;text-decoration:none;cursor:pointer';
-      }
-    } catch(e) {
-      res.innerHTML = '<div style="border:1px solid #ef4444;border-radius:12px;padding:16px;background:rgba(239,68,68,0.03);font-size:0.85rem;color:var(--text-muted)">AI 回答暂不可用，正在展示搜索结果...</div>';
-      doSearch(q);
-    }
-  }
-
-  async function doSearch(q) {
-    try {
-      const r = await fetch('/kb/api/search?q=' + encodeURIComponent(q));
-      const d = await r.json();
-      const docs = Array.isArray(d) ? d : (d.results || d.documents || []);
-      if (!docs.length) {
-        res.innerHTML += '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:0.85rem">无匹配结果</div>';
-        return;
-      }
-      res.innerHTML += docs.slice(0, 5).map(function(d) {
-        var cat = d.category || d.topic || '';
-        return '<a href="' + escA(d.source_url || '#') + '" style="display:block;padding:10px 14px;margin-bottom:4px;background:var(--surface-2);border:1px solid var(--border-card);border-radius:8px;text-decoration:none;color:var(--text-1);transition:border-color 0.15s" onmouseover="this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--border-card)\'">' +
-          '<span style="font-weight:600;font-size:0.85rem">' + esc(d.title || '?') + '</span>' +
-          (cat ? '<span style="float:right;font-size:0.65rem;font-weight:600;padding:2px 6px;border-radius:4px;color:' + (cat==='早报'?'#d97706':cat==='AI技术'?'#7c3aed':'#059669') + ';background:' + (cat==='早报'?'rgba(245,158,11,0.1)':cat==='AI技术'?'rgba(139,92,246,0.1)':'rgba(16,185,129,0.1)') + '">' + esc(cat) + '</span>' : '') +
-        '</a>';
-      }).join('');
-    } catch(e) {}
-  }
-
-  function ask(q) {
-    if (q.length < 2) return;
-    doAsk(q);
-  }
-
-  btn.addEventListener('click', function() {
-    ask(inp.value.trim());
-  });
-
-  inp.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      ask(this.value.trim());
-    }
-    if (e.key === 'Escape') {
-      this.value = '';
-      res.style.display = 'none';
-      res.innerHTML = '';
-      this.blur();
-    }
-  });
-})();
-</script>
+<!-- Quick Links -->
+<div style="text-align:center;margin-top:8px;padding:12px 0">
+  <a href="/daily/ai-morning/" class="card-link">早报</a>
+  <a href="/daily/ai-tech/" class="card-link">AI技术</a>
+  <a href="/daily/ai-finance/" class="card-link">AI财经</a>
+  <a href="/hardware/" class="card-link">硬件编程</a>
+  <a href="/ideas/" class="card-link">有趣点子</a>
+</div>
 {{ end }}
