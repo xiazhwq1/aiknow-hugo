@@ -4,52 +4,49 @@
   {{ partial "head.html" . }}
   <style>
     /* ─── Mobile Responsive ─── */
-    @media (max-width: 768px) {
-      main.container { max-width: 100% !important; padding: 0 14px 40px !important; }
-      .section-header { padding: 28px 0 16px !important; }
-      h1 { font-size: 1.35em !important; }
-      .card {
-        flex-direction: column !important; align-items: flex-start !important;
-        gap: 4px !important; padding: 14px 16px !important;
-        margin-bottom: 6px; border-radius: 10px !important;
-        background: var(--surface-1); border: var(--border-card) !important;
-      }
-      .card:active { background: var(--surface-2) !important; border-color: var(--accent) !important; }
-      .card .arrow { display: none; }
-      .card .date { min-width: 0 !important; font-size: 0.75rem !important; color: var(--accent) !important; font-weight: 600 !important; }
-      .card .summary {
-        white-space: normal !important; font-size: 0.85rem !important;
-        line-height: 1.45 !important; display: -webkit-box;
-        -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text-1);
-      }
-      .list { margin-top: 12px !important; }
-      .site-nav { padding: 8px 14px; gap: 4px; }
-      .site-nav-links { gap: 3px; }
-      .site-nav-links a { font-size: 12px; padding: 4px 8px; }
-      .site-nav-cta { font-size: 0.75em; padding: 4px 8px; }
+    @media (max-width: 900px) {
+      .app-shell { grid-template-columns: 52px minmax(0,1fr) !important; }
+      .app-sidebar { width: 52px !important; padding: 12px 8px !important; }
+      .sidebar-label, .sidebar-logo-hot, .sidebar-brand { display: none !important; }
+      .sidebar-logo { justify-content: center !important; }
+      .sidebar-link { justify-content: center !important; padding: 8px 0 !important; }
+      .sidebar-icon { margin: 0 !important; }
+
+      .app-middle { display: none !important; }
     }
-    @media (max-width: 480px) {
-      main.container { padding: 0 10px 32px !important; }
-      h1 { font-size: 1.15em !important; }
-      .section-header { padding: 22px 0 12px !important; }
-      .card { padding: 12px 14px !important; margin-bottom: 5px; border-radius: 8px !important; }
-      .card .summary { font-size: 0.8rem !important; -webkit-line-clamp: 3; }
-      .card .date { font-size: 0.7rem !important; }
-      .site-nav { padding: 6px 8px; gap: 2px; }
-      .site-nav-links { gap: 1px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-      .site-nav-links a { font-size: 11px; padding: 3px 6px; }
-      .site-nav-logo img { width: 22px; height: 22px; }
-      .site-nav-logo span { font-size: 0.8rem !important; display: inline !important; }
-      .site-nav-ctas { gap: 3px; }
-      .site-nav-cta { font-size: 0.7em; padding: 3px 6px; }
+    @media (max-width: 640px) {
+      .app-shell { grid-template-columns: 1fr !important; }
+      .app-sidebar { display: none !important; }
+      .app-middle { display: none !important; }
     }
   </style>
 </head>
 <body>
-  {{ partial "nav.html" . }}
-  <main class="container" style="max-width:860px;margin:0 auto;padding:0 20px 40px">
-    {{ block "main" . }}{{ end }}
-  </main>
+  <div class="app-shell">
+    <!-- 左栏：一级菜单 -->
+    {{ partial "sidebar.html" . }}
+
+    <!-- 中栏：二级筛选 -->
+    <div class="app-middle">
+      <div class="middle-title">筛选</div>
+      <nav class="middle-nav">
+        {{ block "middle" . }}
+        <a href="/" class="middle-link{{ if .IsHome }} middle-link--active{{ end }}">全部</a>
+        <a href="/daily/ai-morning/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-morning" }} middle-link--active{{ end }}">早报</a>
+        <a href="/daily/ai-tech/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-tech" }} middle-link--active{{ end }}">AI技术</a>
+        <a href="/daily/ai-finance/" class="middle-link{{ if hasPrefix .RelPermalink "/daily/ai-finance" }} middle-link--active{{ end }}">AI财经</a>
+        <a href="/hardware/" class="middle-link{{ if hasPrefix .RelPermalink "/hardware" }} middle-link--active{{ end }}">硬件</a>
+        <a href="/ideas/" class="middle-link{{ if hasPrefix .RelPermalink "/ideas" }} middle-link--active{{ end }}">点子</a>
+        {{ end }}
+      </nav>
+    </div>
+
+    <!-- 右栏：详细内容 -->
+    <main class="app-main">
+      {{ block "main" . }}{{ end }}
+    </main>
+  </div>
+
   {{ partial "footer.html" . }}
   <script src="/assets/js/theme.js"></script>
   <script src="/assets/js/tts-player.js"></script>

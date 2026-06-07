@@ -1,14 +1,10 @@
 {{ define "main" }}
-<div class="aihot-tabs">
-  <a href="/" class="aihot-tab">全部</a>
-  <a href="/daily/ai-morning/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-morning" }} active{{ end }}">早报</a>
-  <a href="/daily/ai-tech/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-tech" }} active{{ end }}">AI技术</a>
-  <a href="/daily/ai-finance/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-finance" }} active{{ end }}">AI财经</a>
-  <a href="/hardware/" class="aihot-tab{{ if hasPrefix .RelPermalink "/hardware" }} active{{ end }}">硬件编程</a>
-  <a href="/ideas/" class="aihot-tab{{ if hasPrefix .RelPermalink "/ideas" }} active{{ end }}">有趣点子</a>
+<div class="aihot-hero">
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.description }}<p class="aihot-tagline">{{ . }}</p>{{ end }}
 </div>
 
-<div class="aihot-feed" style="padding-top:8px">
+<div class="aihot-feed" style="padding-top:0">
   {{ $count := 0 }}
   {{ range .Pages.ByDate.Reverse }}
     {{ $count = add $count 1 }}
@@ -28,9 +24,7 @@
     {{ end }}
     {{ with .Params.topics }}
     <div class="aihot-tags">
-      {{ range first 3 . }}
-      <span class="aihot-tag">{{ .name }}</span>
-      {{ end }}
+      {{ range first 3 . }}<span class="aihot-tag">{{ .name }}</span>{{ end }}
     </div>
     {{ end }}
     <div class="aihot-card-footer">
@@ -40,6 +34,5 @@
   </div>
   {{ end }}
 </div>
-
-<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.8125rem">共 {{ len .Pages }} 篇</div>
+<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:0.8125rem">共 {{ len .Pages }} 篇</div>
 {{ end }}

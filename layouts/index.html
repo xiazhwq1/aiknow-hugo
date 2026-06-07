@@ -1,25 +1,14 @@
 {{ define "main" }}
 <!-- AIHOT-style Header -->
 <div class="aihot-hero">
-  <div style="font-size:1.75rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px">AI Know</div>
-  <p class="aihot-tagline">AI 自动挑选的高价值内容</p>
-</div>
-
-<!-- Category Tabs -->
-<div class="aihot-tabs">
-  <a href="/" class="aihot-tab active">全部</a>
-  <a href="/daily/ai-morning/" class="aihot-tab">早报</a>
-  <a href="/daily/ai-tech/" class="aihot-tab">AI技术</a>
-  <a href="/daily/ai-finance/" class="aihot-tab">AI财经</a>
-  <a href="/hardware/" class="aihot-tab">硬件编程</a>
-  <a href="/ideas/" class="aihot-tab">有趣点子</a>
+  <h1>AI 自动挑选的高价值内容</h1>
+  <p class="aihot-tagline" style="font-size:0.8125rem;color:var(--pm-text-muted)">{{ now.Format "2006-01-02 Monday" }}</p>
 </div>
 
 <!-- AIHOT Feed -->
-<div class="aihot-feed" style="padding-top:4px">
+<div class="aihot-feed" style="padding-top:0">
   {{ range .Params.cards }}
   <div class="aihot-card">
-    <!-- Header: Source name + Score -->
     <div class="aihot-card-header">
       <span class="aihot-source-name" style="font-weight:600">
         {{ if eq .section "overview" }}AI Know 早报
@@ -30,28 +19,15 @@
       </span>
       <span class="aihot-score aihot-score--high">精选</span>
     </div>
-
-    <!-- Title -->
     <a href="{{ with .link }}{{ . }}{{ else }}#{{ end }}" class="aihot-card-title">{{ .title }}</a>
-
-    <!-- Description -->
     <p class="aihot-card-desc">{{ .content }}</p>
-
-    <!-- Divider -->
     {{ with .quote }}
     <div class="aihot-divider"></div>
-    <!-- Recommendation -->
-    <div class="aihot-reco">
-      <span class="aihot-reco-label">推荐理由：</span>{{ . }}
-    </div>
+    <div class="aihot-reco"><span class="aihot-reco-label">推荐理由：</span>{{ . }}</div>
     {{ end }}
-
-    <!-- Footer -->
     <div class="aihot-card-footer">
       <span class="aihot-timestamp">{{ now.Format "15:04" }}</span>
-      {{ with .link }}
-      <a href="{{ . }}" class="read-more">阅读全文</a>
-      {{ end }}
+      {{ with .link }}<a href="{{ . }}" class="read-more">阅读全文</a>{{ end }}
     </div>
   </div>
   {{ end }}

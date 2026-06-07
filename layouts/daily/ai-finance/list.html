@@ -1,37 +1,23 @@
 {{ define "main" }}
-<div class="aihot-tabs">
-  <a href="/" class="aihot-tab">全部</a>
-  <a href="/daily/ai-morning/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-morning" }} active{{ end }}">早报</a>
-  <a href="/daily/ai-tech/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-tech" }} active{{ end }}">AI技术</a>
-  <a href="/daily/ai-finance/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-finance" }} active{{ end }}">AI财经</a>
-  <a href="/hardware/" class="aihot-tab{{ if hasPrefix .RelPermalink "/hardware" }} active{{ end }}">硬件编程</a>
-  <a href="/ideas/" class="aihot-tab{{ if hasPrefix .RelPermalink "/ideas" }} active{{ end }}">有趣点子</a>
+<div class="aihot-hero">
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.description }}<p class="aihot-tagline">{{ . }}</p>{{ end }}
 </div>
 
-<div class="aihot-feed" style="padding-top:8px">
+<div class="aihot-feed" style="padding-top:0">
   {{ $count := 0 }}
   {{ range .Pages.ByDate.Reverse }}
     {{ $count = add $count 1 }}
-    {{ $score := "high" }}
-    {{ if gt $count 5 }}{{ $score = "mid" }}{{ end }}
-    {{ if gt $count 12 }}{{ $score = "low" }}{{ end }}
+    {{ $score := "high" }}{{ if gt $count 5 }}{{ $score = "mid" }}{{ end }}{{ if gt $count 12 }}{{ $score = "low" }}{{ end }}
   <div class="aihot-card">
     <div class="aihot-card-header">
       <span class="aihot-source-name" style="font-weight:600">{{ .Site.Title }}</span>
       <span class="aihot-score aihot-score--{{ $score }}">精选{{ $count }}</span>
     </div>
-    <a href="{{ .RelPermalink }}" class="aihot-card-title">
-      {{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}
-    </a>
-    {{ with .Params.description }}
-    <p class="aihot-card-desc">{{ . }}</p>
-    {{ end }}
+    <a href="{{ .RelPermalink }}" class="aihot-card-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</a>
+    {{ with .Params.description }}<p class="aihot-card-desc">{{ . }}</p>{{ end }}
     {{ with .Params.topics }}
-    <div class="aihot-tags">
-      {{ range first 3 . }}
-      <span class="aihot-tag">{{ .name }}</span>
-      {{ end }}
-    </div>
+    <div class="aihot-tags">{{ range first 3 . }}<span class="aihot-tag">{{ .name }}</span>{{ end }}</div>
     {{ end }}
     <div class="aihot-card-footer">
       <span class="aihot-timestamp">{{ .Date.Format "15:04" }}</span>
