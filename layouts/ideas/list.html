@@ -1,14 +1,16 @@
 {{ define "middle_title" }}{{ .Title }}{{ end }}
 
 {{ define "middle" }}
-  {{ range .Pages.ByDate.Reverse }}
-  <a href="{{ .RelPermalink }}" class="middle-item">
-    <span class="middle-item-date">
-      <span class="day">{{ .Date.Format "02" }}</span>
-      <span class="month">{{ .Date.Format "Jan" }}</span>
-    </span>
-    <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
-  </a>
+  {{ range (.Pages.GroupByDate "2006-01").Reverse }}
+  <div class="middle-month-group">
+    <div class="middle-month-label">{{ .Key }}</div>
+    {{ range .Pages.ByDate.Reverse }}
+    <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="middle-item">
+      <span class="middle-item-date"><span class="day">{{ .Date.Format "02" }}</span></span>
+      <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
+    </a>
+    {{ end }}
+  </div>
   {{ end }}
 {{ end }}
 
@@ -22,35 +24,9 @@
       <div class="date-badge">{{ .Date.Format "2006-01-02 Monday" }}</div>
       {{ with .Params.tagline }}<p style="margin-top:10px;color:var(--text-muted);font-size:0.85em">{{ . }}</p>{{ end }}
     </header>
-
-    {{ if .Params.audio }}
-    <div style="margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:12px;padding:16px 20px">
-      <div style="font-size:0.85em;color:var(--text-soft);margin-bottom:10px">🎧 听书</div>
-      <audio controls preload="metadata" style="width:100%;height:40px" src="{{ .Params.audio }}"></audio>
-    </div>
-    {{ end }}
-
+    {{ if .Params.audio }}<div style="margin-bottom:24px;background:var(--bg-card);border:1px solid var(--border-card);border-radius:12px;padding:16px 20px"><div style="font-size:0.85em;color:var(--text-soft);margin-bottom:10px">🎧 听书</div><audio controls preload="metadata" style="width:100%;height:40px" src="{{ .Params.audio }}"></audio></div>{{ end }}
     <div class="analysis-section">{{ .Content }}</div>
-
-    {{ with .Params.topics }}
-    <div class="sources-section">
-      {{ range . }}
-      <details class="topic-group" open style="margin-bottom:12px;border:1px solid var(--border-card);border-radius:12px;overflow:hidden">
-        <summary class="topic-summary" style="padding:14px 20px;font-weight:600;cursor:pointer;color:var(--text-1)">{{ .name }}
-          <span style="font-size:0.75em;background:rgba(108,140,255,0.1);color:var(--accent);padding:2px 10px;border-radius:10px;margin-left:8px">{{ with .sources }}{{ len . }}{{ end }}条</span>
-        </summary>
-        <div style="padding:4px 20px 16px">
-          {{ range .sources }}
-          <div style="padding:12px 0;border-bottom:1px solid var(--border-card)">
-            <a href="{{ .url }}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:0.95em">{{ .title }}</a>
-            {{ with .summary }}<p style="color:var(--text-muted);font-size:0.85em;margin-top:4px">{{ . }}</p>{{ end }}
-          </div>
-          {{ end }}
-        </div>
-      </details>
-      {{ end }}
-    </div>
-    {{ end }}
+    {{ with .Params.topics }}<div class="sources-section">{{ range . }}<details class="topic-group" open style="margin-bottom:12px;border:1px solid var(--border-card);border-radius:12px;overflow:hidden"><summary class="topic-summary" style="padding:14px 20px;font-weight:600;cursor:pointer;color:var(--text-1)">{{ .name }}<span style="font-size:0.75em;background:rgba(108,140,255,0.1);color:var(--accent);padding:2px 10px;border-radius:10px;margin-left:8px">{{ with .sources }}{{ len . }}{{ end }}条</span></summary><div style="padding:4px 20px 16px">{{ range .sources }}<div style="padding:12px 0;border-bottom:1px solid var(--border-card)"><a href="{{ .url }}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:0.95em">{{ .title }}</a>{{ with .summary }}<p style="color:var(--text-muted);font-size:0.85em;margin-top:4px">{{ . }}</p>{{ end }}</div>{{ end }}</div></details>{{ end }}</div>{{ end }}
   </article>
   {{ end }}
 {{ end }}

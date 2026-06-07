@@ -131,6 +131,21 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
 
+/* Month group */
+.middle-month-group { margin-bottom: 4px; }
+.middle-month-label {
+  padding: 10px 16px 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--pm-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  position: sticky;
+  top: 48px;
+  background: var(--pm-surface-container);
+  z-index: 1;
+}
+
 /* ── RIGHT COLUMN (详细内容) ── */
 .app-main {
   padding: 32px 28px 60px;

@@ -2,25 +2,25 @@
 
 {{ define "middle" }}
   {{ $pages := where .Site.RegularPages "Section" "in" (slice "daily" "hardware" "ideas") }}
-  {{ range first 20 ($pages.ByDate.Reverse) }}
-  <a href="{{ .RelPermalink }}" class="middle-item">
-    <span class="middle-item-date">
-      <span class="day">{{ .Date.Format "02" }}</span>
-      <span class="month">{{ .Date.Format "Jan" }}</span>
-    </span>
-    <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
-  </a>
+  {{ range ($pages.GroupByDate "2006-01").Reverse }}
+  <div class="middle-month-group">
+    <div class="middle-month-label">{{ .Key }}</div>
+    {{ range .Pages.ByDate.Reverse | first 10 }}
+    <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="middle-item">
+      <span class="middle-item-date"><span class="day">{{ .Date.Format "02" }}</span></span>
+      <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
+    </a>
+    {{ end }}
+  </div>
   {{ end }}
 {{ end }}
 
 {{ define "main" }}
-<!-- AIHOT-style Header -->
 <div class="aihot-hero">
   <h1>AI 自动挑选的高价值内容</h1>
   <p class="aihot-tagline">{{ now.Format "2006-01-02 Monday" }}</p>
 </div>
 
-<!-- AIHOT Feed -->
 <div class="aihot-feed" style="padding-top:0">
   {{ range .Params.cards }}
   <div class="aihot-card">
