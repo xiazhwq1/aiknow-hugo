@@ -1,12 +1,8 @@
 {{ define "middle_title" }}{{ .Title }}{{ end }}
 
 {{ define "middle" }}
-  {{ $monthGroups := .Pages.GroupByDate "2006-01" }}
-  {{ $len := len $monthGroups }}
-  {{ range seq $len }}
-    {{ $i := sub $len . }}
-    {{ $group := index $monthGroups $i }}
-  <details class="middle-month"{{ if eq . 1 }} open{{ end }}>
+  {{ range $i, $group := .Pages.GroupByDate "2006-01" }}
+  <details class="middle-month"{{ if eq $i 0 }} open{{ end }}>
     <summary class="middle-month-head">
       <span class="middle-month-name">{{ index (split $group.Key "-") 0 }} 年 {{ index (split $group.Key "-") 1 | strings.TrimLeft "0" }} 月</span>
       <span class="middle-month-count">{{ len $group.Pages }}</span>
