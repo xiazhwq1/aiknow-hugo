@@ -13,7 +13,8 @@
 {{ end }}
 
 {{ define "main" }}
-  {{ $first := index (.Pages.ByDate.Reverse) 0 }}
+  {{ $renderable := where .Pages ".Params.build.render" "!=" "never" }}
+  {{ $first := index ($renderable.ByDate.Reverse) 0 }}
   {{ with $first }}
   <article>
     <header style="text-align:center;padding:48px 0 32px">

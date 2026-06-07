@@ -201,7 +201,7 @@ footer { text-align: center; padding: 24px; border-top: var(--pm-border-thin); c
     box-shadow: 4px 0 24px rgba(0,0,0,0.4);
     align-items: stretch;
   }
-  [data-sidebar-open="true"] .app-sidebar { transform: translateX(0); }
+  .app-sidebar.sidebar--open { transform: translateX(0); }
 
   /* Show full sidebar content on mobile */
   .app-sidebar .sidebar-close { display: flex; }
@@ -212,14 +212,14 @@ footer { text-align: center; padding: 24px; border-top: var(--pm-border-thin); c
   .app-sidebar .sidebar-icon { margin: 0 4px 0 0; }
 
   /* Backdrop overlay */
-  [data-sidebar-open="true"]::before {
-    content: '';
-    position: fixed;
-    inset: 0;
+  .sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0;
     background: rgba(0,0,0,0.5);
     z-index: 199;
     backdrop-filter: blur(2px);
   }
+  .sidebar-overlay--visible { display: block; }
 
   /* Mobile top bar */
   .app-mobile-bar {

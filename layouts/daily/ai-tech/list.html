@@ -2,7 +2,7 @@
 
 {{ define "middle" }}
   {{ range .Pages.ByDate.Reverse }}
-  <a href="{{ .RelPermalink }}" class="middle-item">
+  <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="middle-item">
     <span class="middle-item-date">
       <span class="day">{{ .Date.Format "02" }}</span>
       <span class="month">{{ .Date.Format "Jan" }}</span>
@@ -13,7 +13,8 @@
 {{ end }}
 
 {{ define "main" }}
-  {{ $first := index (.Pages.ByDate.Reverse) 0 }}
+  {{ $renderable := where .Pages ".Params.build.render" "!=" "never" }}
+  {{ $first := index ($renderable.ByDate.Reverse) 0 }}
   {{ with $first }}
   <article>
     <header style="text-align:center;padding:48px 0 32px">
