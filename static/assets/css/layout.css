@@ -136,6 +136,10 @@
   background: var(--pm-surface-overlay);
 }
 
+/* Hide sidebar toggle & backdrop by default (shown only on mobile via @media) */
+.sidebar-toggle { display: none; }
+.sidebar-backdrop { display: none; }
+
 /* ── MIDDLE COLUMN (二级菜单：栏目文章列表) ── */
 .app-middle {
   position: sticky;
