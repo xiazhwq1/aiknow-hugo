@@ -149,7 +149,6 @@
 /* ── RIGHT COLUMN (详细内容) ── */
 .app-main {
   padding: 32px 28px 60px;
-  max-width: 760px;
   width: 100%;
 }
 .app-main .aihot-hero { text-align: left; padding: 0 0 20px; max-width: none; margin: 0; }
