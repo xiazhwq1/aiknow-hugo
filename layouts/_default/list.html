@@ -1,19 +1,14 @@
 {{ define "main" }}
-<!-- Category Tabs (AIHOT style) -->
 <div class="aihot-tabs">
-  <a href="/daily/ai-morning/" class="aihot-tab">早报</a>
-  <a href="/daily/ai-tech/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-tech/" }} active{{ end }}">AI技术</a>
-  <a href="/daily/ai-finance/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-finance/" }} active{{ end }}">AI财经</a>
-  <a href="/hardware/" class="aihot-tab{{ if hasPrefix .RelPermalink "/hardware/" }} active{{ end }}">硬件编程</a>
-  <a href="/ideas/" class="aihot-tab{{ if hasPrefix .RelPermalink "/ideas/" }} active{{ end }}">有趣点子</a>
+  <a href="/" class="aihot-tab">全部</a>
+  <a href="/daily/ai-morning/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-morning" }} active{{ end }}">早报</a>
+  <a href="/daily/ai-tech/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-tech" }} active{{ end }}">AI技术</a>
+  <a href="/daily/ai-finance/" class="aihot-tab{{ if hasPrefix .RelPermalink "/daily/ai-finance" }} active{{ end }}">AI财经</a>
+  <a href="/hardware/" class="aihot-tab{{ if hasPrefix .RelPermalink "/hardware" }} active{{ end }}">硬件编程</a>
+  <a href="/ideas/" class="aihot-tab{{ if hasPrefix .RelPermalink "/ideas" }} active{{ end }}">有趣点子</a>
 </div>
 
-<div class="section-header" style="text-align:center;padding:8px 0 16px">
-  <h1 style="font-size:1.5rem;font-weight:800">{{ .Title }}</h1>
-  {{ with .Params.description }}<p style="color:var(--text-3);margin-top:4px;font-size:0.875rem">{{ . }}</p>{{ end }}
-</div>
-
-<div class="aihot-feed" style="padding-top:0">
+<div class="aihot-feed" style="padding-top:8px">
   {{ $count := 0 }}
   {{ range .Pages.ByDate.Reverse }}
     {{ $count = add $count 1 }}
@@ -22,26 +17,29 @@
     {{ if gt $count 12 }}{{ $score = "low" }}{{ end }}
   <div class="aihot-card">
     <div class="aihot-card-header">
-      <div class="aihot-source">
-        <div class="aihot-avatar" style="font-size:0.625rem">{{ .Date.Format "01-02" }}</div>
-        <span class="aihot-source-name">{{ .Date.Format "Monday" }}</span>
-      </div>
+      <span class="aihot-source-name" style="font-weight:600">{{ .Site.Title }}</span>
       <span class="aihot-score aihot-score--{{ $score }}">精选{{ $count }}</span>
     </div>
-    <a href="{{ .RelPermalink }}" class="aihot-card-title" style="font-size:0.9375rem">
+    <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="aihot-card-title">
       {{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}
     </a>
     {{ with .Params.description }}
-    <p class="aihot-card-desc" style="font-size:0.8125rem;-webkit-line-clamp:3">{{ . }}</p>
+    <p class="aihot-card-desc">{{ . }}</p>
+    {{ end }}
+    {{ with .Params.topics }}
+    <div class="aihot-tags">
+      {{ range first 3 . }}
+      <span class="aihot-tag">{{ .name }}</span>
+      {{ end }}
+    </div>
     {{ end }}
     <div class="aihot-card-footer">
       <span class="aihot-timestamp">{{ .Date.Format "15:04" }}</span>
-      <a href="{{ .RelPermalink }}" class="read-more">阅读 →</a>
+      <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="read-more">阅读全文</a>
     </div>
   </div>
   {{ end }}
 </div>
 
-<!-- Count -->
-<div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:0.8125rem">共 {{ len .Pages }} 篇</div>
+<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.8125rem">共 {{ len .Pages }} 篇</div>
 {{ end }}

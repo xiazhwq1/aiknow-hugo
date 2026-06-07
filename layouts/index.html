@@ -1,26 +1,33 @@
 {{ define "main" }}
-<!-- Category Tabs (AIHOT style) -->
-<div class="aihot-tabs" style="padding-top:16px">
+<!-- AIHOT-style Header -->
+<div class="aihot-hero">
+  <div style="font-size:1.75rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px">AI Know</div>
+  <p class="aihot-tagline">AI 自动挑选的高价值内容</p>
+</div>
+
+<!-- Category Tabs -->
+<div class="aihot-tabs">
+  <a href="/" class="aihot-tab active">全部</a>
   <a href="/daily/ai-morning/" class="aihot-tab">早报</a>
-  <a href="/daily/ai-tech/" class="aihot-tab active">AI技术</a>
+  <a href="/daily/ai-tech/" class="aihot-tab">AI技术</a>
   <a href="/daily/ai-finance/" class="aihot-tab">AI财经</a>
   <a href="/hardware/" class="aihot-tab">硬件编程</a>
   <a href="/ideas/" class="aihot-tab">有趣点子</a>
 </div>
 
 <!-- AIHOT Feed -->
-<div class="aihot-feed" style="padding-top:0">
-  
+<div class="aihot-feed" style="padding-top:4px">
   {{ range .Params.cards }}
   <div class="aihot-card">
-    <!-- Header: Source + Score -->
+    <!-- Header: Source name + Score -->
     <div class="aihot-card-header">
-      <div class="aihot-source">
-        <div class="aihot-avatar">{{ if eq .section "overview" }}AI{{ else if eq .section "tech" }}🔬{{ else if eq .section "finance" }}📈{{ else if eq .section "hardware" }}⚡{{ else }}💡{{ end }}</div>
-        <span class="aihot-source-name">
-          {{ if eq .section "overview" }}AI早报{{ else if eq .section "tech" }}AI技术{{ else if eq .section "finance" }}AI财经{{ else if eq .section "hardware" }}硬件编程{{ else }}有趣点子{{ end }}
-        </span>
-      </div>
+      <span class="aihot-source-name" style="font-weight:600">
+        {{ if eq .section "overview" }}AI Know 早报
+        {{ else if eq .section "tech" }}AI Know 技术
+        {{ else if eq .section "finance" }}AI Know 财经
+        {{ else if eq .section "hardware" }}AI Know 硬件
+        {{ else }}AI Know 创意{{ end }}
+      </span>
       <span class="aihot-score aihot-score--high">精选</span>
     </div>
 
@@ -30,31 +37,23 @@
     <!-- Description -->
     <p class="aihot-card-desc">{{ .content }}</p>
 
+    <!-- Divider -->
     {{ with .quote }}
-    <!-- Quote / recommendation -->
+    <div class="aihot-divider"></div>
+    <!-- Recommendation -->
     <div class="aihot-reco">
       <span class="aihot-reco-label">推荐理由：</span>{{ . }}
     </div>
     {{ end }}
 
-    {{ with .link }}
-    <!-- Read more -->
+    <!-- Footer -->
     <div class="aihot-card-footer">
-      <span class="aihot-timestamp">📅 今日</span>
-      <a href="{{ . }}" class="read-more" style="color:var(--pm-accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:gap 0.2s">阅读全文 →</a>
+      <span class="aihot-timestamp">{{ now.Format "15:04" }}</span>
+      {{ with .link }}
+      <a href="{{ . }}" class="read-more">阅读全文</a>
+      {{ end }}
     </div>
-    {{ end }}
   </div>
   {{ end }}
-
-</div>
-
-<!-- Quick Links -->
-<div style="text-align:center;margin-top:8px;padding:12px 0">
-  <a href="/daily/ai-morning/" class="card-link">早报</a>
-  <a href="/daily/ai-tech/" class="card-link">AI技术</a>
-  <a href="/daily/ai-finance/" class="card-link">AI财经</a>
-  <a href="/hardware/" class="card-link">硬件编程</a>
-  <a href="/ideas/" class="card-link">有趣点子</a>
 </div>
 {{ end }}
