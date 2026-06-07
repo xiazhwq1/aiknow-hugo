@@ -2,14 +2,17 @@
 
 {{ define "middle" }}
   {{ $monthGroups := .Pages.GroupByDate "2006-01" }}
-  {{ range $i, $group := $monthGroups.Reverse }}
-  <details class="middle-month"{{ if eq $i 0 }} open{{ end }}>
+  {{ $len := len $monthGroups }}
+  {{ range seq $len }}
+    {{ $i := sub $len . }}
+    {{ $group := index $monthGroups $i }}
+  <details class="middle-month"{{ if eq . $len }} open{{ end }}>
     <summary class="middle-month-head">
-      <span class="middle-month-name">{{ index (split .Key "-") 0 }} 年 {{ index (split .Key "-") 1 | strings.TrimLeft "0" }} 月</span>
-      <span class="middle-month-count">{{ len .Pages }}</span>
+      <span class="middle-month-name">{{ index (split $group.Key "-") 0 }} 年 {{ index (split $group.Key "-") 1 | strings.TrimLeft "0" }} 月</span>
+      <span class="middle-month-count">{{ len $group.Pages }}</span>
     </summary>
     <div class="middle-month-list">
-      {{ range .Pages.ByDate.Reverse }}
+      {{ range $group.Pages.ByDate.Reverse }}
       <a href="{{ with .Params.url }}{{ . }}{{ else }}{{ .RelPermalink }}{{ end }}" class="middle-item">
         <span class="middle-item-date"><span class="day">{{ .Date.Format "02" }}</span></span>
         <span class="middle-item-title">{{ with .Params.tagline }}{{ . }}{{ else }}{{ .Title }}{{ end }}</span>
