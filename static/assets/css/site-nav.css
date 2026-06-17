@@ -142,3 +142,12 @@
   .site-nav-ctas, .site-nav-actions { gap: 4px; }
   .site-nav-cta { font-size: 0.6875rem; padding: 3px 7px; }
 }
+
+/* OPC 选择器下拉菜单 */
+.site-nav-dropdown{position:relative;display:inline-block}
+.opc-trigger{cursor:pointer}
+.site-nav-dropdown .opc-menu{display:none;position:absolute;top:100%;right:0;margin-top:6px;background:var(--bg2,#11161e);border:1px solid var(--border,#1f2937);border-radius:8px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:200}
+.site-nav-dropdown:hover .opc-menu{display:block}
+.opc-menu a{display:block;padding:8px 12px;font-size:13px;color:var(--text,#e5e7eb);border-radius:4px;white-space:nowrap}
+.opc-menu a:hover{background:var(--bg3,#1a212b);text-decoration:none}
+.opc-menu a.active{background:var(--accent,#3b82f6);color:#fff}

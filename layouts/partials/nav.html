@@ -9,6 +9,13 @@
         <a href="/ideas/"{{ if hasPrefix .RelPermalink "/ideas/" }} class="active"{{ end }}>有趣点子</a>
         <a href="/aieng/"{{ if hasPrefix .RelPermalink "/aieng/" }} class="active"{{ end }}>AI工程</a>
         <a href="/easyvibe/"{{ if hasPrefix .RelPermalink "/easyvibe/" }} class="active"{{ end }}>Vibe编程</a>
+        <div class="site-nav-dropdown">
+            <a href="/aichain/" class="opc-trigger{{ if hasPrefix .RelPermalink "/aichain" }} active{{ end }}">OPC选择器 ▾</a>
+            <div class="opc-menu">
+                <a href="/aichain/"{{ if hasPrefix .RelPermalink "/aichain/" }} class="active"{{ end }}>👤 个人机会</a>
+                <a href="/aichain-co/"{{ if hasPrefix .RelPermalink "/aichain-co/" }} class="active"{{ end }}>🏢 企业机会</a>
+            </div>
+        </div>
     </div>
     <div class="site-nav-ctas">
         <a href="/kb/write.html" class="site-nav-cta write">AI论坛</a>
